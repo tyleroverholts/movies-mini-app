@@ -25,6 +25,11 @@ const Home = () => {
         <Link to={`/search/${searchParam}`}>
           <button>Search</button>
         </Link>
+        <div>
+        <Link to='/add'>
+          <button>Add Movies</button>
+        </Link>
+        </div>
         {movies.map((movie, index) =>
           <p key={index}>{movie.title}</p>
         )}

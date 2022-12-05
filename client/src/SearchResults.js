@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import Context from './Context.js'
 
 const SearchResults = () => {
-  const { movies, searchParam, setSearchParam } = useContext(Context);
+  const { movies, searchParam } = useContext(Context);
   //const [ results, setResults ] = useState(null);
   return(
     <>
