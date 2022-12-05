@@ -54,7 +54,9 @@ const Home = () => {
       body: JSON.stringify(body)
     })
     .then(res => {
-      console.log(res.json())
+      console.log(res.json());
+      setRedirect(true);
+      handleReload();
       })
     .catch(err => {
       console.log(err);
