@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const AddMovies = () => {
   const navigate = useNavigate();
-  const { movies, addParam, setAddParam } = useContext(Context);
+  const { movies, addParam, setAddParam, redirect, setRedirect } = useContext(Context);
 
   const handleAddChange = (event) => {
     const postBody = {
@@ -26,6 +26,7 @@ const AddMovies = () => {
     })
     .then(res => {
       console.log(res.json())
+      setRedirect(true)
       navigate('/')
       })
     .catch(err => {

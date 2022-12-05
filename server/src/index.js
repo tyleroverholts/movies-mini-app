@@ -32,7 +32,7 @@ app.post('/', async (req, res) => {
   const { body } = req;
   try {
     let newMovie = await knex('movies')
-      .insert({title: `${body.title}`, userAdded: `${body.userAdded}`}, 'id')
+      .insert({title: `${body.title}`, userAdded: `${body.userAdded}`, watched: false}, 'id')
       .then(id => console.log(id))
     let updatedMovies = await knex('movies')
       .select('*')
@@ -46,7 +46,7 @@ app.post('/', async (req, res) => {
 
 app.delete('/', async (req, res) => {
   const { body } = req;
-  try{
+  try {
     let deleteMovie = await knex('movies')
       .delete('*').where('id', '=', `${body.id}`)
     res.status(202).json('Item successfully deleted.')
@@ -54,6 +54,22 @@ app.delete('/', async (req, res) => {
   catch(err){
     console.log(err)
     res.status(400).json('There was a problem processing your request.')
+  }
+})
+
+app.put('/', async (req, res) => {
+  const { body } = req;
+  try {
+    let setWatched = await knex('movies')
+      .where('id', '=', `${body.id}`)
+      .update({
+        watched: `${body.watched}`
+      })
+    res.status(200).json('Watched toggled.')
+  }
+  catch(err){
+    console.log(body);
+    res.status(400).json('There was an error processing your request.')
   }
 })
 

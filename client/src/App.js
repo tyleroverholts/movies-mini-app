@@ -9,6 +9,7 @@ function App() {
   const [ movies, setMovies ] = useState(null);
   const [ searchParam, setSearchParam ] = useState(null);
   const [ addParam, setAddParam ] = useState(null);
+  const [ redirect, setRedirect ] = useState(false);
 
   useEffect(() => {
     fetch('http://localhost:8080')
@@ -22,7 +23,7 @@ function App() {
     <>
     {movies !== null ?
     <>
-    <Context.Provider value={{movies, searchParam, setSearchParam, addParam, setAddParam}}>
+    <Context.Provider value={{movies, searchParam, setSearchParam, addParam, setAddParam, redirect, setRedirect}}>
       <Routes>
         <Route path='/' element={<Home />}/>
         <Route path='/search/:results' element={<SearchResults />}/>
