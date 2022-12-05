@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors')
 const knex = require('knex')({
   client: 'pg',
   connection: {
@@ -9,10 +10,10 @@ const knex = require('knex')({
     database: 'miniapp_1'
   }
 });
-const bodyParser = require('body-parser')
 const app = express();
 
-app.use(bodyParser.json())
+app.use(cors())
+app.use(express.json());
 
 app.get('/', async (req, res) => {
   let movies
@@ -23,6 +24,7 @@ app.get('/', async (req, res) => {
     res.status(200).send(movies);
   }catch(err) {
     console.log(err);
+    res.send('There was an error processing your request.')
   }
 })
 
