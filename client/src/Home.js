@@ -7,6 +7,7 @@ const Home = () => {
   const { movies, setSearchParam, searchParam, redirect, setRedirect } = useContext(Context)
   const [ watchedMovies, setWatchedMovies] = useState(null)
 
+  //RELOAD PAGE ON DATA CHANGES
   const handleReload = () => {
     if(redirect) window.location.reload();
     return true ? false : true;
@@ -17,6 +18,7 @@ const Home = () => {
     setRedirect(false)
   },[handleReload])
 
+  //DELETE DATA
   const handleDelete = (movieId) => {
     const body = {
       id: movieId
@@ -36,6 +38,7 @@ const Home = () => {
     })
   }
 
+  //SET NEW PARAMETER
   const handleSetWatched = (movie) => {
     const setWatched = movie.watched ? false : true;
     const body = {
@@ -60,23 +63,27 @@ const Home = () => {
   }
 
   //RENDER HELP FUNCTIONS
+
+  const mapOutput = (movie, index) => {
+    return(
+      <div key={index}>
+        <p>{movie.title}</p><button onClick={() => handleDelete(movie.id)}>Delete</button>
+        <label htmlFor='watched'>Watched</label>
+        <input type='checkbox' name='watched' checked={movie.watched} onChange={() => handleSetWatched(movie)}/>
+      </div>
+    )
+  }
+  const mapMovies = () => {
+    return movies.map((movie, index) => {
+      if(movie.userAdded){
+        return <>{mapOutput(movie, index)}</>
+      }
+      })
+  }
   const defaultMovies = () => {
     return (
       <>
-            {movies.length ? movies.map((movie, index) => {
-              if(movie.userAdded){
-                return (
-                <div key={index}>
-                <p>{movie.title}</p><button onClick={() => handleDelete(movie.id)}>Delete</button>
-                <label htmlFor='watched'>Watched</label>
-                <input type='checkbox' name='watched' checked={movie.watched} onChange={() => handleSetWatched(movie)}/>
-                </div>
-                )
-              }
-              })
-            :
-            <p>You have not added any movies.</p>
-            }
+        {movies.length ? mapMovies():<p>You have not added any movies.</p>}
       </>
     )
   }
@@ -86,23 +93,15 @@ const Home = () => {
       <>
         {movies.length ? movies.map((movie, index) => {
           if(movie.userAdded && movie.watched === parameter){
-            return (
-            <div key={index}>
-            <p>{movie.title}</p><button onClick={() => handleDelete(movie.id)}>Delete</button>
-            <label htmlFor='watched'>Watched</label>
-            <input type='checkbox' name='watched' checked={movie.watched} onChange={() => handleSetWatched(movie)}/>
-            </div>
-              )
+            return <>{mapOutput(movie, index)}</>
            }
           })
             :
-          <p>You have not watched any movies.</p>
+          <p>You have not added any movies.</p>
         }
       </>
     )
   }
-
-
 
   //APP RENDER
   return(
