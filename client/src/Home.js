@@ -1,9 +1,11 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Context from './Context.js';
+import Header from './components/Header.js'
 
 const Home = () => {
   const { movies, setSearchParam, searchParam, redirect, setRedirect } = useContext(Context)
+  const [ watchedMovies, setWatchedMovies] = useState(null)
 
   const handleReload = () => {
     if(redirect) window.location.reload();
@@ -14,12 +16,6 @@ const Home = () => {
     handleReload();
     setRedirect(false)
   },[handleReload])
-
-
-  const handleChange = (event) => {
-    setSearchParam(event.target.value);
-    return;
-  }
 
   const handleDelete = (movieId) => {
     const body = {
@@ -63,38 +59,65 @@ const Home = () => {
     })
   }
 
-  return(
-    <>
-        {movies !== undefined ?
-    <>
-      <div className="App">
-        <label htmlFor='movie-search'>Search for Movies:</label>
-        <input type='search' id='movie-search' onChange={handleChange}/>
-        <Link to={`/search/${searchParam}`}>
-          <button>Search</button>
-        </Link>
-        <div>
-        <Link to='/add'>
-          <button>Add Movies</button>
-        </Link>
-        </div>
+  //RENDER HELP FUNCTIONS
+  const defaultMovies = () => {
+    return (
+      <>
+            {movies.length ? movies.map((movie, index) => {
+              if(movie.userAdded){
+                return (
+                <div key={index}>
+                <p>{movie.title}</p><button onClick={() => handleDelete(movie.id)}>Delete</button>
+                <label htmlFor='watched'>Watched</label>
+                <input type='checkbox' name='watched' checked={movie.watched} onChange={() => handleSetWatched(movie)}/>
+                </div>
+                )
+              }
+              })
+            :
+            <p>You have not added any movies.</p>
+            }
+      </>
+    )
+  }
+
+  const movieFilteredList = (parameter) => {
+    return(
+      <>
         {movies.length ? movies.map((movie, index) => {
-          if(movie.userAdded){
+          if(movie.userAdded && movie.watched === parameter){
             return (
             <div key={index}>
             <p>{movie.title}</p><button onClick={() => handleDelete(movie.id)}>Delete</button>
             <label htmlFor='watched'>Watched</label>
             <input type='checkbox' name='watched' checked={movie.watched} onChange={() => handleSetWatched(movie)}/>
             </div>
-            )
-          }
+              )
+           }
           })
-        :
-        <p>You have not added any movies.</p>
+            :
+          <p>You have not watched any movies.</p>
         }
-      </div>
-    </>
-    :
+      </>
+    )
+  }
+
+
+
+  //APP RENDER
+  return(
+    <>
+      {movies !== undefined ?
+        <>
+          <div className="App">
+            <Header />
+            <button onClick={() => setWatchedMovies(true)}>See Watched Movies</button>
+            <button onClick={() => setWatchedMovies(false)}>See Movie to Watch</button>
+            <button onClick={() => setWatchedMovies(null)}>See All Movies</button>
+            {watchedMovies === null ? defaultMovies() : (watchedMovies ? movieFilteredList(true) : movieFilteredList(false))}
+          </div>
+        </>
+      :
       <p>Page is loading...</p>
       }
     </>
