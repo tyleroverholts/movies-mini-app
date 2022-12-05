@@ -7,7 +7,7 @@ exports.up = function(knex) {
     .createTable('movies', (table) => {
       table.increments('id');
       table.string('title');
-      table.timestamp('accessed', true, 2);
+      table.boolean('userAdded');
     })
 };
 

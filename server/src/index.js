@@ -12,7 +12,7 @@ const knex = require('knex')({
 });
 const app = express();
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 
 app.get('/', async (req, res) => {
@@ -32,7 +32,7 @@ app.post('/', async (req, res) => {
   const { body } = req;
   try {
     let newMovie = await knex('movies')
-      .insert({title: `${body.title}`}, 'id')
+      .insert({title: `${body.title}`, userAdded: `${body.userAdded}`}, 'id')
       .then(id => console.log(id))
     let updatedMovies = await knex('movies')
       .select('*')
@@ -44,5 +44,17 @@ app.post('/', async (req, res) => {
   }
 })
 
+app.delete('/', async (req, res) => {
+  const { body } = req;
+  try{
+    let deleteMovie = await knex('movies')
+      .delete('*').where('id', '=', `${body.id}`)
+    res.status(202).json('Item successfully deleted.')
+  }
+  catch(err){
+    console.log(err)
+    res.status(400).json('There was a problem processing your request.')
+  }
+})
 
 module.exports = app
