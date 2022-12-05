@@ -36,6 +36,9 @@ const AddMovies = () => {
 
   return(
     <>
+      <div className='home-button'>
+        <button onClick={() => navigate('/')}>Back to Home</button>
+      </div>
       <label htmlFor='add-movie'>Add Movie:</label>
       <form className='add-movie'>
         <label htmlFor='title'>Movie Title:</label>
